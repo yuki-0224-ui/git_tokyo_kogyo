@@ -38,15 +38,12 @@
 14: 	/* この条件に当てはまる場合はサポートされていない */
 15: }
 16: 
-17: /* 「学習レベル」設定の取得/変更のサポート確認 */
-18: FjiEscParam.dwMainFunc = FJI_EP1_GETSUPPORTINFO;
-19: FjiEscParam.dwSubFunc = FJI_EP1_GSI_ENVCONTROL;
-20: FjiEscParam.dwOption = FJI_EP1_ENV_MEMORIZELEVEL;
-21: FjiEscParam.lpPointer = NULL;
-22: lSupport = (LONG)ImmEscape(hKL, hIMC, 
-23: 			FJI_ESCAPE_PUBLIC1, &FjiEscParam);
+171 : ----- 定義済:ここから -----
+2 : HIMC	hIMC;		/* インプットコンテキスト	*/
+3 : ----- 定義済:ここまで -----
+4 : 
+5 : /* 日本語入力をオフ */
+6 : ImmSetOpenStatus(hIMC, FALSE);
 24: if(0 == (lSupport & 0x00000001) && 0 == (lSupport & 0x00000002)){
 25: 	/* この条件に当てはまる場合はサポートされていない */
 26: }
-
-25: free(lphKL);
