@@ -1,0 +1,52 @@
+ ----- 定義済:ここから -----
+2 : #define SMP_NAME_CMIMEFNAME "fjcm090.ime"
+3 : 		 	/* Charset-入力アシストのIMEファイル名 */
+4 : UINT uImeCnt;	/* キーボードレイアウトの数		*/
+5 : HKL *lphKL; 	/* キーボードレイアウト一覧格納用	*/
+6 : HWND hWnd;		/* Charset-入力アシストを使用したい	*/
+7 : 			/* ウィンドウのハンドル		*/
+8 : char szFileName[_MAX_FNAME]; 	/* IMEファイル名格納領域	*/
+9 : ----- 定義済:ここまで -----
+10: 
+11: /* キーボードレイアウト一覧を取得 */
+12: uImeCnt = GetKeyboardLayoutList(0, lphKL);
+13: lphKL = (HKL*)malloc(sizeof(HKL) * uImeCnt);
+14: GetKeyboardLayoutList(uImeCnt, lphKL);
+15: 
+16: /* Charset-入力アシスト が見つかるまで繰り返す */
+17: for(i = 0; i < uImeCnt; i++){
+18: 	ImmGetIMEFileName(lphKL[i], szFileName, sizeof(szFileName));
+19: 	if(0 == _memicmp(szFileName,	SMP_NAME_CMIMEFNAME, 
+20: 				strlen(SMP_NAME_CMIMEFNAME))){
+21: 		/* Charset-入力アシスト に変更する */
+22: 		ActivateKeyboardLayout(lphKL[i], 0);
+23: 	}
+24: }
+: ----- 定義済:ここから -----
+2 : HIMC	hIMC;	 /* インプットコンテキスト		*/
+3 : HKL	hKL;	 /* キーボードレイアウト		*/
+4 : UINT	nQuery;	 /* ImmEscape()呼出しに使用		*/
+5 : FJI_ESCAPE_PARAM FjiEscParam;	/* ImmEscape()呼出しに使用	*/
+6 : LONG	lSupport;	 /* ImmEscape()の戻り値 サポート情報	*/
+7 : ----- 定義済:ここまで -----
+8 : 
+9 : /* PUBLIC1インタフェース自体のサポート確認 */
+10: nQuery = FJI_ESCAPE_PUBLIC1;
+11: lSupport = (LONG)ImmEscape(hKL, hIMC, 
+12: 			IME_ESC_QUERY_SUPPORT, &nQuery);
+13: if(0 == lSupport){
+14: 	/* この条件に当てはまる場合はサポートされていない */
+15: }
+16: 
+17: /* 「学習レベル」設定の取得/変更のサポート確認 */
+18: FjiEscParam.dwMainFunc = FJI_EP1_GETSUPPORTINFO;
+19: FjiEscParam.dwSubFunc = FJI_EP1_GSI_ENVCONTROL;
+20: FjiEscParam.dwOption = FJI_EP1_ENV_MEMORIZELEVEL;
+21: FjiEscParam.lpPointer = NULL;
+22: lSupport = (LONG)ImmEscape(hKL, hIMC, 
+23: 			FJI_ESCAPE_PUBLIC1, &FjiEscParam);
+24: if(0 == (lSupport & 0x00000001) && 0 == (lSupport & 0x00000002)){
+25: 	/* この条件に当てはまる場合はサポートされていない */
+26: }
+
+25: free(lphKL);
