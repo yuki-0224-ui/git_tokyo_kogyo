@@ -8,10 +8,12 @@
 8 : char szFileName[_MAX_FNAME]; 	/* IMEファイル名格納領域	*/
 9 : ----- 定義済:ここまで -----
 10: 
-11: /* キーボードレイアウト一覧を取得 */
-12: uImeCnt = GetKeyboardLayoutList(0, lphKL);
-13: lphKL = (HKL*)malloc(sizeof(HKL) * uImeCnt);
-14: GetKeyboardLayoutList(uImeCnt, lphKL);
+11:1 : ----- 定義済:ここから -----
+2 : HIMC	hIMC;		/* インプットコンテキスト	*/
+3 : ----- 定義済:ここまで -----
+4 : 
+5 : /* 日本語入力をオン */
+6 : ImmSetOpenStatus(hIMC, TRUE);
 15: 
 16: /* Charset-入力アシスト が見つかるまで繰り返す */
 17: for(i = 0; i < uImeCnt; i++){
